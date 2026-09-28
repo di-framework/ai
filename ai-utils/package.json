@@ -1,16 +1,69 @@
 {
   "name": "@di-framework/ai-utils",
-  "version": "0.0.0",
-  "private": true,
+  "version": "6.0.0",
+  "description": "Agentic utilities for @di-framework/ai \u2014 Agent Skills, file/shell tools, todos, memory, and subagents",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "private": false,
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "bun": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "author": "@di-framework Contributors",
   "license": "(MIT OR Apache-2.0)",
-  "description": "Stub. Source lands in the v6 extract.",
   "repository": {
     "type": "git",
     "url": "https://github.com/di-framework/ai",
     "directory": "ai-utils"
   },
+  "bugs": {
+    "url": "https://github.com/di-framework/ai/issues"
+  },
+  "homepage": "https://github.com/di-framework/ai",
+  "keywords": [
+    "ai",
+    "llm",
+    "agent-skills",
+    "skills",
+    "spring-ai",
+    "di-framework"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
+    "build": "rm -rf dist && bun build ./src/index.ts --outdir ./dist --target node --external @di-framework/ai --external @di-framework/core && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "prepublishOnly": "bun run build",
     "test": "bun test"
+  },
+  "devDependencies": {
+    "@di-framework/ai": "workspace:*",
+    "@di-framework/core": "^5",
+    "@di-framework/repo": "^5",
+    "@huggingface/transformers": "4.2.0",
+    "@types/bun": "latest",
+    "typescript": "^5"
+  },
+  "peerDependencies": {
+    "@di-framework/ai": "^6",
+    "@di-framework/core": "^5",
+    "@di-framework/repo": "^5",
+    "@huggingface/transformers": "4.2.0",
+    "typescript": "^5"
+  },
+  "peerDependenciesMeta": {
+    "@di-framework/repo": {
+      "optional": true
+    },
+    "@huggingface/transformers": {
+      "optional": true
+    }
   }
 }

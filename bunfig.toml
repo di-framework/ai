@@ -1,4 +1,5 @@
 [test]
+preload = ["./ai/tests/preload-wasm-mock.ts"]
 coverageReporter = ["text", "lcov"]
 coverageThreshold = { lines = 1.0, functions = 0 }
 coveragePathIgnorePatterns = [

@@ -1,5 +1,10 @@
 # di-framework/ai
 
-`@di-framework/ai` (chat, tools, RAG, MCP, agents) and `@di-framework/ai-utils` (Agent Skills, file/shell tools, todos, memory). Peers on `@di-framework/core`.
+| Path | Package |
+| --- | --- |
+| `ai` | `@di-framework/ai` |
+| `ai-utils` | `@di-framework/ai-utils` |
 
-This tree is a bun workspace stub for the v6 split ([#485](https://github.com/di-framework/di-framework/issues/485)). Package source moves here in the extract issue.
+Peers stay on published `@di-framework/core` / `@di-framework/auth`. The CLI host (`di-framework agent`, `di-framework skills`) stays in `di-framework/di-framework`.
+
+First publish from this remote is **6.0.0**.
