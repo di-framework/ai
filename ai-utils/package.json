@@ -44,7 +44,6 @@
     "test": "bun test"
   },
   "devDependencies": {
-    "@di-framework/ai": "workspace:*",
     "@di-framework/core": "^5",
     "@di-framework/repo": "^5",
     "@huggingface/transformers": "4.2.0",
