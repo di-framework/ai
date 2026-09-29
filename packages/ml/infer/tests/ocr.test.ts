@@ -4,7 +4,13 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ensureOcrDictionary, ensureOcrModel } from '../../scripts/fetch-ocr-model.ts';
-import { ctcDecode, loadCharset, recognizeLine, renderGlyphLine } from '../src/ocr.ts';
+import {
+  ctcDecode,
+  loadCharset,
+  preprocessLine,
+  recognizeLine,
+  renderGlyphLine,
+} from '../src/ocr.ts';
 import { Session } from '../src/session.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -33,6 +39,25 @@ describe('OCR rec', () => {
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
+  });
+
+  test('rejects an empty crop and a session with no tensors', async () => {
+    expect(() => preprocessLine({ width: 0, height: 48, data: new Uint8Array() })).toThrow(
+      'empty image',
+    );
+    const image = renderGlyphLine('H');
+    const noInputs = {
+      inputs: [],
+      outputs: ['y'],
+      run: async () => ({}),
+    } as unknown as Session;
+    await expect(recognizeLine(noInputs, image, [''])).rejects.toThrow('no inputs');
+    const noOutputs = {
+      inputs: ['x'],
+      outputs: ['y'],
+      run: async () => ({}),
+    } as unknown as Session;
+    await expect(recognizeLine(noOutputs, image, [''])).rejects.toThrow('no outputs');
   });
 
   test('ctcDecode skips blanks and repeats', () => {
