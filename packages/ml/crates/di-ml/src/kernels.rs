@@ -371,11 +371,6 @@ pub fn squeeze(x: &Tensor, axes: Option<&[i64]>) -> Result<Tensor> {
             }
         }
     }
-    if shape.is_empty() {
-        shape.push(1);
-        // scalar: keep rank-0
-        shape.clear();
-    }
     x.clone()
         .into_shape_with_order(IxDyn(&shape))
         .map_err(|err| Error::fail(err.to_string()))
@@ -797,6 +792,19 @@ mod tests {
         // rms =  sqrt((9+16)/2) = sqrt(12.5)
         let rms = (12.5f32).sqrt();
         assert!((y[[0, 0]] - 3.0 / rms).abs() < 1e-5);
+    }
+
+    #[test]
+    fn squeeze_removes_unit_axes() {
+        let row = Array::from_shape_vec(IxDyn(&[1, 2, 1]), vec![3.0, 4.0]).unwrap();
+        let y = squeeze(&row, None).unwrap();
+        assert_eq!(y.shape(), &[2]);
+        assert_eq!(y.iter().copied().collect::<Vec<_>>(), vec![3.0, 4.0]);
+
+        let scalar = Array::from_shape_vec(IxDyn(&[1, 1]), vec![5.0]).unwrap();
+        let y = squeeze(&scalar, None).unwrap();
+        assert!(y.shape().is_empty());
+        assert_eq!(y.iter().copied().collect::<Vec<_>>(), vec![5.0]);
     }
 
     #[test]
