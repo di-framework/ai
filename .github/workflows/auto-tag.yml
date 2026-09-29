@@ -44,6 +44,11 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
+
       - name: Compute next version
         id: version
         run: |
@@ -99,9 +104,9 @@ jobs:
           # Bump after branch reset so origin/main doesn't wipe package.json.
           # npm version only rewrites the workspace root. Updating workspaces
           # with npm also runs an install and writes package-lock.json, so the
-          # published packages are synced with node instead.
+          # published packages are synced with the Bun script instead.
           npm version "$NEXT" --no-git-tag-version --allow-same-version
-          node scripts/sync-workspace-versions.mjs
+          bun scripts/sync-workspace-versions.ts
 
           git add package.json
           # Workspace manifests are not all under packages/.

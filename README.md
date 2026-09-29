@@ -4,8 +4,9 @@ TypeScript libraries for building AI applications with chat models, tools, memor
 
 | Package | Purpose | Documentation |
 | --- | --- | --- |
-| `@di-framework/ai` | Chat clients, providers, tools, memory, RAG, MCP, workflows, and A2A | [AI README](ai/README.md) |
-| `@di-framework/ai-utils` | Agent Skills (`SKILL.md`), repository instructions, file and shell tools, and skill discovery | [AI utilities README](ai-utils/README.md) |
+| `@di-framework/ai` | Chat clients, providers, tools, memory, RAG, MCP, workflows, and A2A | [AI README](packages/ai/README.md) |
+| `@di-framework/ai-utils` | Agent Skills (`SKILL.md`), repository instructions, file and shell tools, and skill discovery | [AI utilities README](packages/ai-utils/README.md) |
+| `@di-framework/ml` | ONNX Runtime Web session for a `di-ml` checkpoint | [ML README](packages/ml/README.md) |
 
 ## Installation
 
@@ -20,6 +21,8 @@ bun add @di-framework/ai-utils@^6
 ```
 
 You can also install these packages with npm. The first release from this repository is **6.0.0**; the core and auth peers remain on published **5.x** packages.
+
+The `di-ml` CLI is a prerelease of `@di-framework/ml`, one version per OS and architecture: `npm install -g @di-framework/ml@6.0.1-darwin-aarch64`. See the [ML README](packages/ml/README.md).
 
 ## Quick start
 
@@ -50,7 +53,7 @@ PROVIDER=openai AUTH=api bun chat.ts
 PROVIDER=anthropic AUTH=api bun chat.ts
 ```
 
-`createChatModel()` reads `PROVIDER`, `AUTH`, and optional `MODEL`. You can select them explicitly with `createChatModel({ provider: 'anthropic', auth: 'api', model: 'your-model-id' })`. See the [provider documentation](ai/README.md#select-api-or-subscription-access) for supported routes and subscription setup.
+`createChatModel()` reads `PROVIDER`, `AUTH`, and optional `MODEL`. You can select them explicitly with `createChatModel({ provider: 'anthropic', auth: 'api', model: 'your-model-id' })`. See the [provider documentation](packages/ai/README.md#select-api-or-subscription-access) for supported routes and subscription setup.
 
 ### Stream a response
 
@@ -143,7 +146,7 @@ const reply = await agent.chat('Review src/index.ts.');
 console.log(reply.content);
 ```
 
-Skills expose descriptions first and load their full instructions when activated. The toolbox includes file-reading tools; writing, editing, and shell execution are opt-in. See the [utilities documentation](ai-utils/README.md) for toolbox configuration, instruction discovery, and skill catalogs.
+Skills expose descriptions first and load their full instructions when activated. The toolbox includes file-reading tools; writing, editing, and shell execution are opt-in. See the [utilities documentation](packages/ai-utils/README.md) for toolbox configuration, instruction discovery, and skill catalogs.
 
 ## Try the client without an API key
 
@@ -172,7 +175,7 @@ bun run typecheck
 bun run lint
 ```
 
-Run a package's tests with `bun test ai/tests` or `bun test ai-utils/tests`. The workspace uses published core/auth peers. The CLI host (`di-framework agent`, `di-framework skills`) lives in the separate `di-framework/di-framework` repository.
+Run a package's tests with `bun test packages/ai/tests` or `bun test packages/ai-utils/tests`. Train an ONNX workspace with the `di-ml` binary (`cargo run -p di-ml-cli -- <workspace>`). The workspace uses published core/auth peers. The CLI host (`di-framework agent`, `di-framework skills`) lives in the separate `di-framework/di-framework` repository.
 
 ## License
 

@@ -1,0 +1,36 @@
+[workspace]
+members = ["packages/ml/crates/cli", "packages/ml/crates/di-ml"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/di-framework/ai"
+
+[workspace.dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive"] }
+di-ml = { path = "packages/ml/crates/di-ml" }
+half = "2.7.1"
+inquire = "0.9.4"
+ndarray = "0.17.2"
+onnx-rs = "0.1.2"
+rand = "0.10.2"
+regex = "1.13.1"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+sha2 = "0.11.0"
+thiserror = "2.0.20"
+toml = "1.1.5"
+tempfile = "3.27.0"
+metal = "0.33.0"
+tokenizers = "0.23.2"
+
+# Shipped artifacts. opt-level 3 keeps the training kernels vectorized.
+# Thin LTO, one codegen unit, and symbol stripping shrink the binary.
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

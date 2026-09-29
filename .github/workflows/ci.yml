@@ -35,3 +35,16 @@ jobs:
 
       - name: Test
         run: bun test --coverage
+
+  cargo-test:
+    name: Cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Test
+        run: cargo test
