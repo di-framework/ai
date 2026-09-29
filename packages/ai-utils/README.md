@@ -135,7 +135,7 @@ const tools = SkillsToolbox.builder()
 const client = ChatClient.builder(model).defaultTools(...tools).build();
 ```
 
-See [`examples/packages/ai-skills`](../../examples/packages/ai-skills) (`bun start` uses `process.env.OPENAI_API_KEY`) and [`examples/packages/ai-plugins`](../../examples/packages/ai-plugins) for official `@di-framework/plugin` discovery plus elective MCP wiring.
+See [`examples/packages/ai-skills`](../../../examples/packages/ai-skills) (`bun start` uses `process.env.OPENAI_API_KEY`) and [`examples/packages/ai-plugins`](../../../examples/packages/ai-plugins) for official `@di-framework/plugin` discovery plus elective MCP wiring.
 
 ## What a skill is
 
@@ -651,7 +651,7 @@ Platform runtimes can independently supply `catalogStore`, `vectorSearch`, and a
 `VectorStore` (including `BunSqliteVectorStore`) and `fromStorageAdapter` accepts
 `@di-framework/repo` adapters. Remote catalogs use `buildAsync()` / `createSkillsAgentAsync()` so
 discovery lists only descriptors and the selected body is fetched after activation. See the
-[skill adapter authoring guide](../../docs/skill-adapter-authoring.md) for contracts, readiness,
+[skill adapter authoring guide](../../../docs/skill-adapter-authoring.md) for contracts, readiness,
 failure behavior, contract tests, and performance reporting.
 
 ## Skill-only and MCP
@@ -700,4 +700,4 @@ const mcp = skillsToolboxAsMcp({
 | Discovery | `discoverAgentInstructions`, `loadAiIgnorePolicy`, `evaluateAiIgnorePath`, `loadSkillsDirectory`, `resolveSkillPackageDirectories`, `existingSkillDirectories`, `resolvePluginSources`, `loadPluginDirectory`, `loadPluginsDirectory`, `resolvePluginPackageDirectories`, `existingPluginDirectories`, `SkillsIndex.builder()`, `searchSkillsIndex`, `di-framework skills index` commands |
 | Parse / validate | `parseSkillMarkdown`, `parseYaml`, `agentSkill`, `validateSkill`, `validateSkillDefinition`, `validateSkillDirectory`, `validateSkillsDirectory`, `validateSkillCatalog`, `validateResolvedSkillCatalog`, `parsePluginManifest`, `parseMcpConfig`, `validatePlugin`, `validatePluginDefinition`, `validatePluginDirectory`, `validatePluginsDirectory`, `validatePluginCatalog`, `validateResolvedPluginCatalog` |
 
-**Style:** `static of` / `static builder` and free functions for pure helpers. See [docs/static-methods-convention.md](../../docs/static-methods-convention.md).
+**Style:** `static of` / `static builder` and free functions for pure helpers. See [docs/static-methods-convention.md](../../../docs/static-methods-convention.md).

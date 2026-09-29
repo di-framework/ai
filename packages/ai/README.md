@@ -2,7 +2,7 @@
 
 Spring AI–aligned chat, tools, RAG, MCP, and agents for TypeScript. Portable model abstractions sit on top of OpenAI-compatible and Anthropic HTTP adapters (no vendor SDKs). Wire everything into `@di-framework/core` with annotations (`@AiService`, `@Agent`, `@Tool`, …) or `configureAi`.
 
-**Style:** prefer `static of` / `static builder` factories and free functions for pure helpers; keep instance methods for stateful clients and fluent builders. See [docs/static-methods-convention.md](../../docs/static-methods-convention.md).
+**Style:** prefer `static of` / `static builder` factories and free functions for pure helpers; keep instance methods for stateful clients and fluent builders. See [docs/static-methods-convention.md](../../../docs/static-methods-convention.md).
 
 ## Features
 
@@ -189,7 +189,7 @@ assistant/tool-response group. `MessageWindowChatMemory` supports atomic
 replacement for opt-in persistent compression. `onCompression` reports token
 counts, compressed ranges, persistence, and duration without message bodies.
 
-**Agent Skills** (`SKILL.md`, progressive disclosure) are not in this package. Use [`@di-framework/ai-utils`](../di-framework-ai-utils) `SkillsAgent.builder()` / `SkillsToolbox.builder()`. Docs: [Agent Skills](../../docs/Writerside/topics/ai-utils.md).
+**Agent Skills** (`SKILL.md`, progressive disclosure) are not in this package. Use [`@di-framework/ai-utils`](../di-framework-ai-utils) `SkillsAgent.builder()` / `SkillsToolbox.builder()`. Docs: [Agent Skills](../../../docs/Writerside/topics/ai-utils.md).
 
 ### Tool Execution Authorization & Interception
 
@@ -397,7 +397,7 @@ const model = new ScriptedChatModel([
 
 ## License
 
-Licensed under either [MIT](../../LICENSE-MIT) or [Apache-2.0](../../LICENSE-APACHE), at your option.
+Licensed under either [MIT](../../../LICENSE-MIT) or [Apache-2.0](../../../LICENSE-APACHE), at your option.
 # Durable vector stores
 
 The package exports `BunSqliteVectorStore`, `VectorizeVectorStore`, `PgVectorStore`, and `S3VectorStore` (for AWS S3 Vectors). All implement the same `VectorStore` API and can be passed to RAG advisors. `SearchRequest.queryEmbedding` and `Document.embedding` let callers pass precomputed vectors. The Bun store persists float32 BLOBs, exact-scans small tables, and builds a portable HNSW graph for larger ones (`searchMode: 'auto' | 'exact' | 'ann'`). Optional `wasm-similarity` accelerates exact cosine ranking and is not required. Vectorize and pgvector delegate ranking to their managed backends. `S3VectorStore` supports serverless vector search and metadata filtering directly in AWS S3 Vectors with built-in AST filter translation (`translateS3FilterExpression`). Create provider schemas and indexes out of band and keep provider clients optional so Workers and Bun bundles do not pull external SDK dependencies.

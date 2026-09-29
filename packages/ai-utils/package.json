@@ -20,7 +20,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/di-framework/ai",
-    "directory": "ai-utils"
+    "directory": "packages/ai-utils"
   },
   "bugs": {
     "url": "https://github.com/di-framework/ai/issues"

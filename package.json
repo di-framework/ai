@@ -7,8 +7,8 @@
   "author": "@di-framework Contributors",
   "repository": "https://github.com/di-framework/ai",
   "workspaces": [
-    "ai",
-    "ai-utils"
+    "packages/*",
+    "packages/ml/infer"
   ],
   "scripts": {
     "postinstall": "git config core.hooksPath .githooks",

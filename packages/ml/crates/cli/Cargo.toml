@@ -1,0 +1,16 @@
+[package]
+name = "di-ml-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "CLI for directory-driven ONNX fine-tuning"
+
+[[bin]]
+name = "di-ml"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+di-ml.workspace = true
+inquire.workspace = true

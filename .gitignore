@@ -35,3 +35,12 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # di-framework generated assets
 .di-framework
+
+# Rust build output
+/target
+
+# di-ml generated fixtures
+packages/ml/infer/testdata/*.onnx
+packages/ml/examples/ocr/models/*.onnx
+packages/ml/examples/ocr/en_dict.txt
+xor-workspace/
