@@ -82,7 +82,7 @@ export class WorkersAiChatModel implements ChatModel {
       this.throwIfCancelled(opts);
       if (event === DONE) continue;
       const delta = readDelta(event);
-      if (delta.text) content = mergeText(content, delta.text);
+      if (delta.text) content = delta.snapshot ? delta.text : content + delta.text;
       if (delta.toolCalls.length > 0) toolCalls = delta.toolCalls;
       if (delta.finishReason) finishReason = delta.finishReason;
       if (delta.usage) tokenUsage = delta.usage;
@@ -279,6 +279,8 @@ function snapshot(
 
 function readDelta(event: unknown): {
   text: string;
+  /** True when the text is a full message, not a token to append. */
+  snapshot: boolean;
   toolCalls: ToolCall[];
   finishReason?: string;
   usage?: ReturnType<typeof readUsage>;
@@ -287,14 +289,11 @@ function readDelta(event: unknown): {
   const choice = firstChoice(record);
   const delta = isRecord(choice?.delta) ? choice.delta : undefined;
   const message = isRecord(choice?.message) ? choice.message : undefined;
-  const text =
-    typeof delta?.content === 'string'
-      ? delta.content
-      : typeof message?.content === 'string'
-        ? message.content
-        : typeof record.response === 'string'
-          ? record.response
-          : '';
+  const deltaText = typeof delta?.content === 'string' ? delta.content : undefined;
+  const messageText = typeof message?.content === 'string' ? message.content : undefined;
+  const responseText = typeof record.response === 'string' ? record.response : undefined;
+  const snapshot = deltaText === undefined && messageText !== undefined;
+  const text = deltaText ?? messageText ?? responseText ?? '';
   const finish =
     typeof choice?.finish_reason === 'string'
       ? choice.finish_reason
@@ -303,6 +302,7 @@ function readDelta(event: unknown): {
         : undefined;
   return {
     text,
+    snapshot,
     toolCalls: readToolCalls(delta ?? message ?? record),
     ...(finish ? { finishReason: finish } : {}),
     usage: readUsage(record),
@@ -422,11 +422,6 @@ function* parseSseBlock(block: string): Generator<unknown | typeof DONE> {
       yield { response: data };
     }
   }
-}
-
-function mergeText(current: string, next: string): string {
-  if (next.startsWith(current)) return next;
-  return current + next;
 }
 
 function unwrap(raw: unknown): Record<string, unknown> {

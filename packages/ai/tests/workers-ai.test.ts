@@ -143,7 +143,7 @@ describe('WorkersAiChatModel', () => {
     const stream = new ReadableStream<Uint8Array>({
       start(controller) {
         controller.enqueue(encoder.encode('data: {"response":"Hello"}\n\n'));
-        controller.enqueue(encoder.encode('data: {"response":"Hello world"}\n'));
+        controller.enqueue(encoder.encode('data: {"response":" world"}\n'));
         controller.enqueue(
           encoder.encode(
             'data: {"response":"","tool_calls":[{"name":"ping","arguments":{"ok":true}}]}\n',
@@ -173,6 +173,22 @@ describe('WorkersAiChatModel', () => {
       chunks.push(chunk.content);
     }
     expect(chunks).toEqual(['one', 'onetwo']);
+  });
+
+  test('appends token deltas and replaces a full message snapshot', async () => {
+    async function* events() {
+      yield { response: 'ha' };
+      yield { response: 'ha' };
+      yield { choices: [{ delta: { content: ' ' } }] };
+      yield { choices: [{ delta: { content: 'The' } }] };
+      yield { choices: [{ message: { content: 'done' } }] };
+    }
+    const model = new WorkersAiChatModel({ binding: asyncBinding(events()) });
+    const chunks = [];
+    for await (const chunk of model.stream(new Prompt('hi')) ?? []) {
+      chunks.push(chunk.content);
+    }
+    expect(chunks).toEqual(['ha', 'haha', 'haha ', 'haha The', 'done']);
   });
 });
 
