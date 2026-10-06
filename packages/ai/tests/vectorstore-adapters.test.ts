@@ -313,4 +313,24 @@ describe('VectorizeVectorStore', () => {
     const hits = await store.similaritySearch(searchRequest({ query: 'x', topK: 5 }));
     expect(hits).toEqual([]);
   });
+
+  test('accepts a binding descriptor and a getter', async () => {
+    const index = makeIndex();
+    const wrapped = new VectorizeVectorStore({
+      index: { binding: index },
+      embeddingModel: new FakeEmbeddingModel(),
+    });
+    await wrapped.add([textDocument('alpha', {}, 'v1')]);
+    expect(index.upserted).toHaveLength(1);
+
+    let current: ReturnType<typeof makeIndex> | undefined;
+    const lazy = new VectorizeVectorStore({
+      index: () => current,
+      embeddingModel: new FakeEmbeddingModel(),
+    });
+    await expect(lazy.similaritySearch(searchRequest({ query: 'x' }))).rejects.toThrow(/Vectorize/);
+    current = index;
+    const hits = await lazy.similaritySearch(searchRequest({ query: 'alpha' }));
+    expect(hits.map((hit) => hit.id)).toContain('v1');
+  });
 });

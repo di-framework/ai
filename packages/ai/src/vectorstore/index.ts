@@ -22,8 +22,12 @@ export {
   S3VectorStore,
   translateS3FilterExpression,
 } from './adapters/s3.ts';
-export type { VectorizeIndex, VectorizeVectorStoreOptions } from './adapters/vectorize.ts';
-export { VectorizeVectorStore } from './adapters/vectorize.ts';
+export type {
+  VectorizeIndex,
+  VectorizeSource,
+  VectorizeVectorStoreOptions,
+} from './adapters/vectorize.ts';
+export { resolveVectorizeIndex, VectorizeVectorStore } from './adapters/vectorize.ts';
 export * from './filter/index.ts';
 export {
   DEFAULT_TOP_K,

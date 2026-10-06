@@ -14,18 +14,51 @@ export interface VectorizeIndex {
   }>;
   deleteByIds(ids: string[]): Promise<unknown>;
 }
+
+/**
+ * A Vectorize index, the `@di-framework/cloudflare` `{ binding }` descriptor,
+ * or a getter that reads the current Worker env.
+ */
+export type VectorizeSource = VectorizeIndex | { readonly binding?: unknown } | (() => unknown);
+
 export interface VectorizeVectorStoreOptions {
-  index: VectorizeIndex;
+  index: VectorizeSource;
   embeddingModel: EmbeddingModel;
   name?: string;
 }
+
+export function resolveVectorizeIndex(source: VectorizeSource): VectorizeIndex {
+  const resolved = typeof source === 'function' ? source() : source;
+  if (isVectorizeIndex(resolved)) return resolved;
+  if (
+    resolved &&
+    typeof resolved === 'object' &&
+    'binding' in resolved &&
+    isVectorizeIndex(resolved.binding)
+  ) {
+    return resolved.binding;
+  }
+  throw new Error(
+    'Vectorize index is not available. Publish the Worker env before using the store.',
+  );
+}
+
+function isVectorizeIndex(value: unknown): value is VectorizeIndex {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as VectorizeIndex).query === 'function' &&
+    typeof (value as VectorizeIndex).upsert === 'function'
+  );
+}
+
 export class VectorizeVectorStore implements VectorStore {
   readonly name: string;
-  private readonly index: VectorizeIndex;
+  private readonly source: VectorizeSource;
   private readonly model: EmbeddingModel;
   private readonly docs = new Map<string, Document>();
   constructor(options: VectorizeVectorStoreOptions) {
-    this.index = options.index;
+    this.source = options.index;
     this.model = options.embeddingModel;
     this.name = options.name ?? 'VectorizeVectorStore';
   }
@@ -36,20 +69,20 @@ export class VectorizeVectorStore implements VectorStore {
       vectors.push({ id: doc.id, values, metadata: { ...doc.metadata, text: doc.text ?? '' } });
       this.docs.set(doc.id, doc);
     }
-    await this.index.upsert(vectors);
+    await this.index().upsert(vectors);
   }
   async get(id: string) {
     return this.docs.get(id) ?? null;
   }
 
   async delete(ids: readonly string[]) {
-    await this.index.deleteByIds([...ids]);
+    await this.index().deleteByIds([...ids]);
     for (const id of ids) this.docs.delete(id);
   }
   async similaritySearch(request: SearchRequest) {
     const matches =
       (
-        await this.index.query(await resolveQueryEmbedding(this.model, request), {
+        await this.index().query(await resolveQueryEmbedding(this.model, request), {
           topK: request.topK,
           returnMetadata: true,
         })
@@ -69,5 +102,9 @@ export class VectorizeVectorStore implements VectorStore {
   }
   similaritySearchQuery(query: string) {
     return this.similaritySearch(searchRequest({ query }));
+  }
+
+  private index(): VectorizeIndex {
+    return resolveVectorizeIndex(this.source);
   }
 }
