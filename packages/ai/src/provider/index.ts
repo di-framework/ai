@@ -59,3 +59,20 @@ export {
 export type { SubscriptionChatModelOptions } from './subscription/model.ts';
 export { SubscriptionChatModel } from './subscription/model.ts';
 export type { BridgeEvent } from './subscription/server.ts';
+export type {
+  WorkersAiBinding,
+  WorkersAiBindingSource,
+  WorkersAiChatOptions,
+  WorkersAiEmbeddingOptions,
+  WorkersAiRunOptions,
+} from './workers-ai/index.ts';
+export {
+  DEFAULT_WORKERS_AI_EMBEDDING_MODEL,
+  DEFAULT_WORKERS_AI_MODEL,
+  isWorkersAiBinding,
+  resolveWorkersAiBinding,
+  WorkersAiChatModel,
+  WorkersAiEmbeddingModel,
+  workersAiChatModel,
+  workersAiEmbeddingModel,
+} from './workers-ai/index.ts';

@@ -384,6 +384,36 @@ new AnthropicChatModel({
 });
 ```
 
+### Cloudflare Workers AI
+
+`WorkersAiChatModel` and `WorkersAiEmbeddingModel` call a Workers AI binding (`env.AI`). They accept the raw binding or the `{ binding }` descriptor from `@di-framework/cloudflare`. Pass a function when the env object arrives in the fetch handler.
+
+```ts
+import { getCloudflareBindings, setCloudflareBindings } from '@di-framework/cloudflare';
+import { configureAi, WorkersAiChatModel, WorkersAiEmbeddingModel } from '@di-framework/ai';
+import { VectorizeVectorStore } from '@di-framework/ai';
+
+const chatModel = new WorkersAiChatModel({
+  binding: () => getCloudflareBindings()?.AI,
+  model: '@cf/meta/llama-3.1-8b-instruct',
+});
+configureAi({ chatModel });
+
+export default {
+  fetch(_request: Request, env: Record<string, unknown>) {
+    setCloudflareBindings(env);
+    const embeddings = WorkersAiEmbeddingModel.of(() => getCloudflareBindings()?.AI);
+    const store = new VectorizeVectorStore({
+      index: () => getCloudflareBindings()?.VECTORS,
+      embeddingModel: embeddings,
+    });
+    return new Response('ok');
+  },
+};
+```
+
+`VectorizeVectorStore` also accepts the Vectorize binding descriptor injected by `@CloudflareBinding('VECTORS')`.
+
 ## Testing
 
 ```ts
