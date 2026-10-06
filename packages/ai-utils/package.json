@@ -1,6 +1,6 @@
 {
   "name": "@di-framework/ai-utils",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "Agentic utilities for @di-framework/ai — Agent Skills, file/shell tools, todos, memory, and subagents",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
