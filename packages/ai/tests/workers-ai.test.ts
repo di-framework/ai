@@ -9,7 +9,12 @@ import {
 import { Prompt } from '../src/chat/prompt/prompt.ts';
 import { media } from '../src/content/media.ts';
 import { textDocument } from '../src/document/document.ts';
-import { WorkersAiChatModel, WorkersAiEmbeddingModel } from '../src/provider/workers-ai/index.ts';
+import {
+  WorkersAiChatModel,
+  WorkersAiEmbeddingModel,
+  workersAiChatModel,
+  workersAiEmbeddingModel,
+} from '../src/provider/workers-ai/index.ts';
 import { functionToolCallback } from '../src/tool/function-tool-callback.ts';
 
 const modelId = '@cf/meta/llama-3.1-8b-instruct';
@@ -156,6 +161,19 @@ describe('WorkersAiChatModel', () => {
     expect(chunks.at(-1)?.content).toBe('Hello world');
     expect(chunks.at(-1)?.hasToolCalls()).toBe(true);
   });
+
+  test('streams an async iterable and constructs a model from the factory', async () => {
+    async function* events() {
+      yield { response: 'one' };
+      yield 'data: {"response":"two"}\n';
+    }
+    const model = workersAiChatModel({ binding: asyncBinding(events()) });
+    const chunks = [];
+    for await (const chunk of model.stream(new Prompt('hi')) ?? []) {
+      chunks.push(chunk.content);
+    }
+    expect(chunks).toEqual(['one', 'onetwo']);
+  });
 });
 
 describe('WorkersAiEmbeddingModel', () => {
@@ -178,6 +196,11 @@ describe('WorkersAiEmbeddingModel', () => {
     });
     const doc = textDocument('hello', {}, 'd1');
     expect(await flat.embedDocument(doc)).toEqual([0.5, 0.6]);
+
+    const factory = workersAiEmbeddingModel({
+      binding: asyncBinding({ data: [[1, 2]] }),
+    });
+    expect(await factory.embed('x')).toEqual([1, 2]);
   });
 
   test('reports a provider error when the payload has no vectors', async () => {
