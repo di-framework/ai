@@ -49,16 +49,16 @@
     "test": "bun test"
   },
   "devDependencies": {
-    "@di-framework/auth": "^5",
+    "@di-framework/auth": "^6",
     "@types/bun": "latest",
-    "typescript": "^5",
+    "typescript": "^7",
     "zod": "^4.6.2",
-    "@di-framework/core": "^5"
+    "@di-framework/core": "^6"
   },
   "peerDependencies": {
-    "@di-framework/auth": "^5",
-    "@di-framework/core": "^5",
-    "typescript": "^5"
+    "@di-framework/auth": "^6",
+    "@di-framework/core": "^6",
+    "typescript": "^7"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0"

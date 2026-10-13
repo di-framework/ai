@@ -40,6 +40,6 @@
   "devDependencies": {
     "@types/bun": "latest",
     "onnx-proto": "8.0.1",
-    "typescript": "^5"
+    "typescript": "^7"
   }
 }
