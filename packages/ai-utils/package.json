@@ -46,7 +46,7 @@
   "devDependencies": {
     "@di-framework/core": "^5",
     "@di-framework/repo": "^5",
-    "@huggingface/transformers": "4.2.0",
+    "@huggingface/transformers": "4.3.1",
     "@types/bun": "latest",
     "typescript": "^5"
   },
@@ -54,7 +54,7 @@
     "@di-framework/ai": "^6",
     "@di-framework/core": "^5",
     "@di-framework/repo": "^5",
-    "@huggingface/transformers": "4.2.0",
+    "@huggingface/transformers": "4.3.1",
     "typescript": "^5"
   },
   "peerDependenciesMeta": {
